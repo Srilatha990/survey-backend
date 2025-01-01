@@ -1,3 +1,7 @@
+
+
+
+
 // const Survey = require('../models/survey');
 
 // // Add a new survey
@@ -17,7 +21,6 @@
 //     res.status(500).json({ success: false, message: 'Error adding survey', error: error.message });
 //   }
 // };
-
 
 // // Get all surveys
 // exports.getAllSurveys = async (req, res) => {
@@ -67,7 +70,6 @@
 //   }
 // };
 
-
 // // Delete a survey
 // exports.deleteSurvey = async (req, res) => {
 //   try {
@@ -83,38 +85,6 @@
 //     res.status(500).json({ success: false, message: 'Error deleting survey', error: error.message });
 //   }
 // };
-
-
-// // In your controller.js file
-// exports.validateAnswers = async (req, res) => {
-//   const { id } = req.params;
-//   const { answers } = req.body;
-
-//   try {
-//     const survey = await Survey.findById(id);
-//     if (!survey) {
-//       return res.status(404).json({ success: false, message: 'Survey not found' });
-//     }
-
-//     let correctAnswersCount = 0;
-
-//     // Loop through the answers and compare with the survey's questions' answers
-//     survey.questions.forEach((question) => {
-//       if (answers[question._id] && question.answers.includes(answers[question._id])) {
-//         correctAnswersCount++;
-//       }
-//     });
-
-//     if (correctAnswersCount === survey.questions.length) {
-//       return res.status(200).json({ correct: true });
-//     } else {
-//       return res.status(200).json({ correct: false });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: 'Error validating answers', error: error.message });
-//   }
-// };
-
 
 
 const Survey = require('../models/survey');
@@ -144,6 +114,22 @@ exports.getAllSurveys = async (req, res) => {
     res.status(200).json({ success: true, data: surveys });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching surveys', error: error.message });
+  }
+};
+
+// Get surveys by category
+exports.getSurveysByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const surveys = await Survey.find({ surveyCategory: category });
+
+    if (!surveys || surveys.length === 0) {
+      return res.status(404).json({ success: false, message: 'No surveys found for this category' });
+    }
+
+    res.status(200).json({ success: true, data: surveys });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching surveys by category', error: error.message });
   }
 };
 
@@ -198,5 +184,17 @@ exports.deleteSurvey = async (req, res) => {
     res.status(200).json({ success: true, message: 'Survey deleted successfully', data: deletedSurvey });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error deleting survey', error: error.message });
+  }
+};
+
+// Get all unique categories from surveys
+exports.getAllCategories = async (req, res) => {
+  try {
+    // Fetch all surveys and extract unique categories
+    const surveys = await Survey.find();
+    const categories = [...new Set(surveys.map(survey => survey.surveyCategory))]; // Unique categories
+    res.status(200).json({ success: true, data: categories }); // Return unique categories
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching categories', error: error.message });
   }
 };
