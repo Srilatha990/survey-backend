@@ -38,7 +38,7 @@ const cors = require('cors');
 
 // CORS setup with the production URL directly specified
 const corsOptions = {
-  origin: 'https://surveysphere.tech/',  // Replace with your production domain
+  origin: 'https://surveysphere.tech',  // Replace with your production domain
   methods: "GET,POST,PUT,DELETE",              // Allowed HTTP methods
   allowedHeaders: "Content-Type",              // Allowed headers
 };
