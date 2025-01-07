@@ -52,7 +52,7 @@ const registerUser = async (req, res) => {
 const verifyOtp = async (req, res) => {
     const { otp } = req.body;
 
-    try {
+    try {b
         const user = await User.findOne({ otp });
 
         if (!user || user.otp !== otp) {
@@ -172,3 +172,8 @@ module.exports ={
     Userlogout,
     verifyOtp
 }
+
+
+
+
+
